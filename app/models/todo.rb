@@ -1,15 +1,15 @@
 class TodoDataSource
-  attr_writer :data
+ def data
+   @data ||= %w(Milk Orange\ Juice Apples Bananas Brocolli Carrots Beef
+               Chicken Enchiladas Hot\ Dogs Butter Bread Pasta Rice).map{|thing| "Buy #{thing}"}
+ end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    puts "called"
-    @data.size
+    data.size
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    p data
-    cell = UITableView.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:nil)
-    cell.textLabel.text = @data[indexPath.row]
-    cell
+    cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:nil)
+    cell.tap { |c| c.textLabel.text = data[indexPath.row] }
   end
 end
