@@ -1,10 +1,19 @@
-class TodoDataSource
- def data
-   @data ||= %w(Milk Orange\ Juice Apples Bananas Brocolli Carrots Beef
-               Chicken Enchiladas Hot\ Dogs Butter Bread Pasta Rice).map{|thing| "Buy #{thing}"}
- end
+class Todo
+  include MotionModel::Model
+  include MotionModel::ArrayModelAdapter
+  include MotionModel::Validatable
+  include MotionModel::Formotion
 
- def data_size
-   data.size
- end
+  columns :name        => :string,
+          :details     => :string,
+          :due_date    => {:type => :date,
+                           :formotion => {:picker_type => :date_time}},
+          :done        => {:type => :boolean, :default => false,
+                           :formotion => {:type => :switch}}
+
+  validates :name, presence: true
+
+  def overdue?
+    NSDate.new > self.due_date && !done
+  end
 end
